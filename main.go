@@ -56,8 +56,8 @@ func scanIP(ip string, wg *sync.WaitGroup, ch chan<- string, unknownCount *int, 
 
 func main() {
 
-	startSubNet := 1
-	endSubNet := 11
+	startSubNet := 9
+	endSubNet := 9
 	startIP := 1
 	endIP := 255
 	baseSubnet := "172.24."
