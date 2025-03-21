@@ -2,61 +2,27 @@ package main
 
 import (
 	"fmt"
-	"sync"
+	"log"
+	"net/http"
 
-	"github.com/LucioSchiavoni/scan-host/core"
+	"github.com/LucioSchiavoni/scan-host/config"
+	"github.com/LucioSchiavoni/scan-host/core/handlers"
+
+	"github.com/LucioSchiavoni/scan-host/infrastructure/database"
+	"github.com/gorilla/mux"
 )
 
 func main() {
-	startSubNet := 9
-	endSubNet := 9
-	startIP := 1
-	endIP := 255
-	baseSubnet := "172.24."
 
-	var wg sync.WaitGroup
-	results := make(chan string, (endSubNet-startSubNet+1)*(endIP-startIP+1))
-	var unknownCount, offlineCount int
-	var mu sync.Mutex
+	config.LoadConfig()
+	database.ConnectDB()
 
-	fmt.Println("📡 Escaneando la red...")
-	fmt.Println("-------------------------------------------------")
-	fmt.Println("| IP              | Nombre de Dominio          |")
-	fmt.Println("-------------------------------------------------")
+	r := mux.NewRouter()
+	r.HandleFunc("/scan", handlers.ScanAll).Methods("GET")
+	r.HandleFunc("/scan/{startSubnet}/{endSubnet}", handlers.ScanRange).Methods("GET")
 
-	for subnet := startSubNet; subnet <= endSubNet; subnet++ {
-		for i := startIP; i <= endIP; i++ {
-			ip := fmt.Sprintf("%s%d.%d", baseSubnet, subnet, i)
+	serverAddress := fmt.Sprintf(":%s", config.ServerPort)
+	log.Printf("🚀 Servidor corriendo en http://localhost%s\n", serverAddress)
+	log.Fatal(http.ListenAndServe(serverAddress, r))
 
-			// if !validate.PingHost(ip) {
-			// 	continue
-			// }
-
-			wg.Add(1)
-			go func(ip string) {
-				defer wg.Done()
-
-				hostname := core.GetHostname(ip, &mu, &unknownCount, &offlineCount)
-
-				mu.Lock()
-				if hostname != "Desconocido" {
-					results <- fmt.Sprintf("| %-15s | %-30s |", ip, hostname)
-				}
-				mu.Unlock()
-			}(ip)
-		}
-	}
-
-	go func() {
-		wg.Wait()
-		close(results)
-	}()
-
-	for result := range results {
-		fmt.Println(result)
-	}
-
-	fmt.Println("-------------------------------------------------")
-	fmt.Printf("🔍 IPs desconocidas: %d\n", unknownCount)
-	fmt.Printf("❌ IPs apagadas: %d\n", offlineCount)
 }
