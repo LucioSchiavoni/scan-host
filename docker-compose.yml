@@ -15,4 +15,4 @@ services:
     volumes:
       - .:/app
     ports:
-      - ${PORT}:${PORT}
+      - "${PORT}:${PORT}"
