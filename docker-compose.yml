@@ -1,12 +1,19 @@
-version: '3.8'
-
 services:
   backend:
     build:
-      context: .  
+      context: .
+    networks_mode: "host"  
     env_file:
       - .env
+    environment:
+      - BASE_IP=${BASE_IP}
+      - PORT=${PORT}
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+      - DB_HOST=${DB_HOST}
+      - DB_NAME=${DB_NAME}
     ports:
       - "${PORT}:${PORT}"  
     volumes:
-      - .:/app  
+      - .:/app
+      - .env:/app/.env
