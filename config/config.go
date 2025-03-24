@@ -19,17 +19,17 @@ var (
 )
 
 func LoadConfig() {
-	err := godotenv.Load("/app/.env")
+	err := godotenv.Load()
 	if err != nil {
 		log.Fatal(" No se pudo cargar el archivo .env. Asegúrate de que exista y tenga las variables necesarias.")
 	}
 
-	FrontendDev := os.Getenv("FRONTEND_URL_DEV")
+	FrontendDev = os.Getenv("FRONTEND_URL_DEV")
 	if FrontendDev == "" {
 		log.Fatal(" FRONTEND_URL_DEV no está definida en el archivo .env")
 	}
 
-	FrontendProd := os.Getenv("FRONTEND_URL_PROD")
+	FrontendProd = os.Getenv("FRONTEND_URL_PROD")
 	if FrontendProd == "" {
 		log.Fatal(" FRONTEND_URL_PROD no está definida en el archivo .env")
 	}
