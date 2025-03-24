@@ -10,5 +10,7 @@ services:
       - DB_PASS=${DB_PASS}
       - DB_HOST=${DB_HOST}
       - DB_NAME=${DB_NAME}
+      - FRONTEND_URL_DEV=${FRONTEND_URL_DEV}
+      - FRONTEND_URL_PROD=${FRONTEND_URL_PROD}
     volumes:
       - .:/app
