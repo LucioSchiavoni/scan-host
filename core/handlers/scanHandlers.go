@@ -3,16 +3,16 @@ package handlers
 import (
 	"encoding/json"
 	"net/http"
-	"os"
 	"strconv"
 
+	"github.com/LucioSchiavoni/scan-host/config"
 	"github.com/LucioSchiavoni/scan-host/core/scans"
 	"github.com/gorilla/mux"
 )
 
 func ScanAll(w http.ResponseWriter, r *http.Request) {
 
-	w.Header().Set("Access-Control-Allow-Origin", os.Getenv("FRONTEND_URL_DEV"))
+	w.Header().Set("Access-Control-Allow-Origin", config.FrontendDev)
 	w.Header().Set("Access-Control-Allow-Methods", "GET, OPTIONS")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
 
@@ -31,7 +31,7 @@ func ScanAll(w http.ResponseWriter, r *http.Request) {
 }
 
 func ScanRange(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", os.Getenv("FRONTEND_URL_DEV"))
+	w.Header().Set("Access-Control-Allow-Origin", config.FrontendDev)
 	w.Header().Set("Access-Control-Allow-Methods", "GET, OPTIONS")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
 

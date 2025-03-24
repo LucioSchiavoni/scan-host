@@ -1,9 +1,7 @@
-version: '3.8'
-
 services:
   backend:
     build:
-      context: .  
+      context: .
     network_mode: "host"  
     environment:
       - BASE_IP=${BASE_IP}
@@ -14,5 +12,3 @@ services:
       - DB_NAME=${DB_NAME}
     volumes:
       - .:/app
-    ports:
-      - "${PORT}:${PORT}" 

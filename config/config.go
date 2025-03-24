@@ -11,16 +11,28 @@ var (
 	BaseIP     string
 	ServerPort string
 
-	DBUser string
-	DBPass string
-	DBHost string
-	DBName string
+	DBUser       string
+	DBPass       string
+	DBHost       string
+	DBName       string
+	FrontendDev  string
+	FrontendProd string
 )
 
 func LoadConfig() {
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal(" No se pudo cargar el archivo .env. Asegúrate de que exista y tenga las variables necesarias.")
+	}
+
+	FrontendDev := os.Getenv("FRONTEND_URL_DEV")
+	if FrontendDev == "" {
+		log.Fatal(" FRONTEND_URL_DEV no está definida en el archivo .env")
+	}
+
+	FrontendProd := os.Getenv("FRONTEND_URL_PROD")
+	if FrontendProd == "" {
+		log.Fatal(" FRONTEND_URL_PROD no está definida en el archivo .env")
 	}
 
 	BaseIP = os.Getenv("BASE_IP")
