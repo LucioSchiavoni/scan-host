@@ -2,7 +2,7 @@ services:
   backend:
     build:
       context: .
-    networks_mode: "host"  
+    network_mode: "host"  
     env_file:
       - .env
     environment:
