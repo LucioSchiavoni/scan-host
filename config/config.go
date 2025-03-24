@@ -8,9 +8,8 @@ import (
 )
 
 var (
-	BaseIP     string
-	ServerPort string
-
+	BaseIP       string
+	ServerPort   string
 	DBUser       string
 	DBPass       string
 	DBHost       string
