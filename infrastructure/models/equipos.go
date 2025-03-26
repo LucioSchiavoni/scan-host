@@ -5,8 +5,9 @@ import (
 )
 
 type Equipo struct {
-	ID        uint      `json:"id" gorm:"primaryKey"`
-	Nombre    string    `json:"nombre"`
-	Piso      int       `json:"piso"`
-	CreatedAt time.Time `json:"fecha" gorm:"default:CURRENT_TIMESTAMP"`
+	ID          uint      `json:"id" gorm:"primaryKey"`
+	Nombre      string    `json:"nombre"`
+	Piso        int       `json:"piso"`
+	Estado      string    `gorm:"default:activo"`
+	UltimaVista time.Time `gorm:"autoUpdateTime"`
 }

@@ -5,11 +5,7 @@ import (
 	"github.com/LucioSchiavoni/scan-host/infrastructure/models"
 )
 
-func SaveScanResult(piso int, ip string, hostname string) {
-	result := models.Equipo{
-		Nombre: hostname,
-		Piso:   piso,
-	}
+func UpdateHostnamesRepository(pc *models.Equipo) error {
 
-	database.DB.Create(&result)
+	return database.DB.Save(pc).Error
 }
