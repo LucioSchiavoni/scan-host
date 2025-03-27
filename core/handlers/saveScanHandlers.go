@@ -10,8 +10,6 @@ import (
 func SaveScanHandler(w http.ResponseWriter, r *http.Request) {
 	result := usecases.SaveScan()
 
-	w.Header().Set("Content-Type", "application/json")
-
 	if result.Error != "" {
 		w.WriteHeader(http.StatusInternalServerError)
 	} else {

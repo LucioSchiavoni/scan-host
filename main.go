@@ -7,6 +7,8 @@ import (
 
 	"github.com/LucioSchiavoni/scan-host/config"
 	"github.com/LucioSchiavoni/scan-host/core/handlers"
+	"github.com/LucioSchiavoni/scan-host/core/middleware"
+	"github.com/LucioSchiavoni/scan-host/infrastructure/database"
 
 	"github.com/gorilla/mux"
 )
@@ -14,10 +16,14 @@ import (
 func main() {
 
 	config.LoadConfig()
-	// database.ConnectDB()
+	database.ConnectDB()
 
 	r := mux.NewRouter()
-	r.HandleFunc("/scan", handlers.ScanAll).Methods("GET")
+
+	r.Use(middleware.CORSMiddleware)
+
+	r.HandleFunc("/scans", handlers.GetScanHandler).Methods("GET")
+	r.HandleFunc("/saveScan", handlers.SaveScanHandler).Methods("POST")
 	r.HandleFunc("/scan/{startSubnet}/{endSubnet}", handlers.ScanRange).Methods("GET")
 
 	serverAddress := fmt.Sprintf(":%s", config.ServerPort)

@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/LucioSchiavoni/scan-host/config"
+	"github.com/LucioSchiavoni/scan-host/infrastructure/models"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -21,5 +22,11 @@ func ConnectDB() {
 		log.Fatal("Error al conectar con la base de datos:", err)
 	}
 
+	err = DB.AutoMigrate(&models.Equipo{})
+	if err != nil {
+		log.Fatal("Error al migrar la tabla equipos:", err)
+	}
+
 	log.Println("✅ Conexión a la base de datos establecida")
+	log.Println("✅ Tabla equipos migrada correctamente")
 }
