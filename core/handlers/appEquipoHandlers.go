@@ -3,10 +3,8 @@ package handlers
 import (
 	"encoding/json"
 	"net/http"
-	"strconv"
 
 	"github.com/LucioSchiavoni/scan-host/infrastructure/repository"
-	"github.com/gorilla/mux"
 )
 
 type AddAppsRequest struct {
@@ -21,7 +19,7 @@ func AddAppsToEquipoHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err := repository.AddAppsToEquipo(req.IDEquipo, req.AppIDs)
+	err := repository.AgregarAplicacionAEquipo(req.IDEquipo, req.AppIDs[0])
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -31,20 +29,20 @@ func AddAppsToEquipoHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(map[string]string{"message": "Aplicaciones asociadas correctamente"})
 }
 
-func GetAppsByEquipoHandler(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	idEquipo, err := strconv.Atoi(vars["id_equipo"])
-	if err != nil {
-		http.Error(w, "ID de equipo inválido", http.StatusBadRequest)
-		return
-	}
+// func GetAppsByEquipoHandler(w http.ResponseWriter, r *http.Request) {
+// 	vars := mux.Vars(r)
+// 	idEquipo, err := strconv.Atoi(vars["id_equipo"])
+// 	if err != nil {
+// 		http.Error(w, "ID de equipo inválido", http.StatusBadRequest)
+// 		return
+// 	}
 
-	apps, err := repository.GetAppsByEquipo(uint(idEquipo))
-	if err != nil {
-		http.Error(w, "Error al obtener las aplicaciones del equipo", http.StatusInternalServerError)
-		return
-	}
+// 	apps, err := repository.GetAppsByEquipo(uint(idEquipo))
+// 	if err != nil {
+// 		http.Error(w, "Error al obtener las aplicaciones del equipo", http.StatusInternalServerError)
+// 		return
+// 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(apps)
-}
+// 	w.Header().Set("Content-Type", "application/json")
+// 	json.NewEncoder(w).Encode(apps)
+// }

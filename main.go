@@ -23,7 +23,7 @@ func main() {
 	r.Use(middleware.CORSMiddleware)
 
 	r.HandleFunc("/scans", handlers.GetScanHandler).Methods("GET")
-	r.HandleFunc("/equipos/{id_equipo}/apps", handlers.GetAppsByEquipoHandler).Methods("GET")
+	// r.HandleFunc("/equipos/{id_equipo}/apps", handlers.GetAppsByEquipoHandler).Methods("GET")
 	r.HandleFunc("/saveScan", handlers.SaveScanHandler).Methods("POST")
 	r.HandleFunc("/scan/{startSubnet}/{endSubnet}", handlers.ScanRange).Methods("GET")
 	r.HandleFunc("/equipos/add-apps", handlers.AddAppsToEquipoHandler).Methods("POST")

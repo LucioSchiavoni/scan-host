@@ -9,7 +9,6 @@ import (
 )
 
 func SaveScanRepository(piso int, hostname string) error {
-	log.Printf("Intentando guardar equipo en DB - Hostname: %s, Piso: %d", hostname, piso)
 
 	result := models.Equipo{
 		Nombre:      hostname,
