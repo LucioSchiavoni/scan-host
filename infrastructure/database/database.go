@@ -22,7 +22,11 @@ func ConnectDB() {
 		log.Fatal("Error al conectar con la base de datos:", err)
 	}
 
-	err = DB.AutoMigrate(&models.Equipo{})
+	err = DB.AutoMigrate(
+		&models.Equipo{},
+		&models.Aplicacion{},
+		&models.EquipoAplicacion{},
+	)
 	if err != nil {
 		log.Fatal("Error al migrar la tabla equipos:", err)
 	}

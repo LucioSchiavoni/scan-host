@@ -5,10 +5,10 @@ import (
 )
 
 type Equipo struct {
-	ID           uint               `json:"id" gorm:"primaryKey"`
+	ID           uint               `json:"id" gorm:"primaryKey;table:equipos"`
 	Nombre       string             `json:"nombre"`
 	Piso         int                `json:"piso"`
-	Estado       string             `gorm:"default:activo"`
-	UltimaVista  time.Time          `gorm:"autoUpdateTime"`
-	Aplicaciones []EquipoAplicacion `gorm:"foreignKey:EquipoID" json:"aplicaciones"`
+	Estado       string             `json:"estado" gorm:"default:activo"`
+	UltimaVista  time.Time          `json:"ultima_vista" gorm:"autoUpdateTime"`
+	Aplicaciones []EquipoAplicacion `json:"aplicacion" gorm:"foreignKey:EquipoID"`
 }

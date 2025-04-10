@@ -3,46 +3,76 @@ package handlers
 import (
 	"encoding/json"
 	"net/http"
+	"strconv"
 
-	"github.com/LucioSchiavoni/scan-host/infrastructure/repository"
+	"github.com/LucioSchiavoni/scan-host/core/usecases"
+	"github.com/gorilla/mux"
 )
 
-type AddAppsRequest struct {
-	IDEquipo uint   `json:"id_equipo"`
-	AppIDs   []uint `json:"id_app"`
-}
-
-func AddAppsToEquipoHandler(w http.ResponseWriter, r *http.Request) {
-	var req AddAppsRequest
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, "Error al procesar la solicitud", http.StatusBadRequest)
-		return
-	}
-
-	err := repository.AgregarAplicacionAEquipo(req.IDEquipo, req.AppIDs[0])
+func GetEquipoDetalleHandler(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	equipoID, err := strconv.ParseUint(vars["id"], 10, 32)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, "ID de equipo inválido", http.StatusBadRequest)
 		return
 	}
 
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(map[string]string{"message": "Aplicaciones asociadas correctamente"})
+	result := usecases.GetEquipoDetalle(uint(equipoID))
+	if result.Error != "" {
+		http.Error(w, result.Error, http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(result)
 }
 
-// func GetAppsByEquipoHandler(w http.ResponseWriter, r *http.Request) {
-// 	vars := mux.Vars(r)
-// 	idEquipo, err := strconv.Atoi(vars["id_equipo"])
-// 	if err != nil {
-// 		http.Error(w, "ID de equipo inválido", http.StatusBadRequest)
-// 		return
-// 	}
+func AgregarAplicacionHandler(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	equipoID, err := strconv.ParseUint(vars["id"], 10, 32)
+	if err != nil {
+		http.Error(w, "ID de equipo inválido", http.StatusBadRequest)
+		return
+	}
 
-// 	apps, err := repository.GetAppsByEquipo(uint(idEquipo))
-// 	if err != nil {
-// 		http.Error(w, "Error al obtener las aplicaciones del equipo", http.StatusInternalServerError)
-// 		return
-// 	}
+	var request struct {
+		AplicacionID uint `json:"aplicacion_id"`
+	}
+	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
+		http.Error(w, "Datos inválidos", http.StatusBadRequest)
+		return
+	}
 
-// 	w.Header().Set("Content-Type", "application/json")
-// 	json.NewEncoder(w).Encode(apps)
-// }
+	result := usecases.AgregarAplicacion(uint(equipoID), request.AplicacionID)
+	if result.Error != "" {
+		http.Error(w, result.Error, http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(result)
+}
+
+func RemoverAplicacionHandler(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	equipoID, err := strconv.ParseUint(vars["id"], 10, 32)
+	if err != nil {
+		http.Error(w, "ID de equipo inválido", http.StatusBadRequest)
+		return
+	}
+
+	aplicacionID, err := strconv.ParseUint(vars["aplicacionId"], 10, 32)
+	if err != nil {
+		http.Error(w, "ID de aplicación inválido", http.StatusBadRequest)
+		return
+	}
+
+	result := usecases.RemoverAplicacion(uint(equipoID), uint(aplicacionID))
+	if result.Error != "" {
+		http.Error(w, result.Error, http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(result)
+}

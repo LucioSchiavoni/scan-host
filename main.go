@@ -14,22 +14,23 @@ import (
 )
 
 func main() {
-
 	config.LoadConfig()
 	database.ConnectDB()
 
 	r := mux.NewRouter()
 
+	// Aplicar el middleware CORS a todas las rutas
 	r.Use(middleware.CORSMiddleware)
 
-	r.HandleFunc("/scans", handlers.GetScanHandler).Methods("GET")
-	// r.HandleFunc("/equipos/{id_equipo}/apps", handlers.GetAppsByEquipoHandler).Methods("GET")
-	r.HandleFunc("/saveScan", handlers.SaveScanHandler).Methods("POST")
-	r.HandleFunc("/scan/{startSubnet}/{endSubnet}", handlers.ScanRange).Methods("GET")
-	r.HandleFunc("/equipos/add-apps", handlers.AddAppsToEquipoHandler).Methods("POST")
+	// Configurar las rutas
+	r.HandleFunc("/scans", handlers.GetScanHandler).Methods("GET", "OPTIONS")
+	r.HandleFunc("/saveScan", handlers.SaveScanHandler).Methods("POST", "OPTIONS")
+	r.HandleFunc("/scan/{startSubnet}/{endSubnet}", handlers.ScanRange).Methods("GET", "OPTIONS")
+	r.HandleFunc("/equipos/{id}", handlers.GetEquipoDetalleHandler).Methods("GET", "OPTIONS")
+	r.HandleFunc("/equipos/{id}/aplicaciones", handlers.AgregarAplicacionHandler).Methods("PUT", "OPTIONS")
+	r.HandleFunc("/equipos/{id}/aplicaciones/{aplicacionId}", handlers.RemoverAplicacionHandler).Methods("DELETE", "OPTIONS")
 
 	serverAddress := fmt.Sprintf(":%s", config.ServerPort)
 	log.Printf("🚀 Servidor corriendo en http://localhost%s\n", serverAddress)
 	log.Fatal(http.ListenAndServe(serverAddress, r))
-
 }
