@@ -27,7 +27,7 @@ func GetEquipoDetalleHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(result)
 }
 
-func AgregarAplicacionHandler(w http.ResponseWriter, r *http.Request) {
+func AgregarAplicacionesHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	equipoID, err := strconv.ParseUint(vars["id"], 10, 32)
 	if err != nil {
@@ -36,21 +36,23 @@ func AgregarAplicacionHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var request struct {
-		AplicacionID uint `json:"aplicacion_id"`
+		IdApp []uint `json:"id_app"`
 	}
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
 		http.Error(w, "Datos inválidos", http.StatusBadRequest)
 		return
 	}
 
-	result := usecases.AgregarAplicacion(uint(equipoID), request.AplicacionID)
-	if result.Error != "" {
-		http.Error(w, result.Error, http.StatusInternalServerError)
-		return
+	for _, appID := range request.IdApp {
+		result := usecases.AgregarAplicacion(uint(equipoID), appID)
+		if result.Error != "" {
+			http.Error(w, result.Error, http.StatusInternalServerError)
+			return
+		}
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(result)
+	json.NewEncoder(w).Encode(map[string]string{"message": "Aplicaciones agregadas correctamente"})
 }
 
 func RemoverAplicacionHandler(w http.ResponseWriter, r *http.Request) {

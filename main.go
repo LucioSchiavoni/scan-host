@@ -27,7 +27,7 @@ func main() {
 	r.HandleFunc("/saveScan", handlers.SaveScanHandler).Methods("POST", "OPTIONS")
 	r.HandleFunc("/scan/{startSubnet}/{endSubnet}", handlers.ScanRange).Methods("GET", "OPTIONS")
 	r.HandleFunc("/equipos/{id}", handlers.GetEquipoDetalleHandler).Methods("GET", "OPTIONS")
-	r.HandleFunc("/equipos/{id}/aplicaciones", handlers.AgregarAplicacionHandler).Methods("PUT", "OPTIONS")
+	r.HandleFunc("/equipos/{id}/aplicaciones", handlers.AgregarAplicacionesHandler).Methods("PUT", "OPTIONS")
 	r.HandleFunc("/equipos/{id}/aplicaciones/{aplicacionId}", handlers.RemoverAplicacionHandler).Methods("DELETE", "OPTIONS")
 
 	serverAddress := fmt.Sprintf(":%s", config.ServerPort)

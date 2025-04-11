@@ -5,3 +5,7 @@ type Aplicacion struct {
 	Nombre  string `json:"nombre"`
 	Version string `json:"version"`
 }
+
+func (Aplicacion) TableName() string {
+	return "aplicacion"
+}
