@@ -14,5 +14,5 @@ services:
       - FRONTEND_URL_PROD=${FRONTEND_URL_PROD}
     volumes:
       - .:/app
-    ports:
-      - "${PORT}:${PORT}"
+    # ports:
+    #   - "${PORT}:${PORT}"
