@@ -34,7 +34,6 @@ func ScanNetwork(startSubnet, endSubnet int) []models.Equipo {
 			go func(ip string, piso int) {
 				defer wg.Done()
 
-				// Verificar si el host está activo antes de intentar obtener el hostname
 				hostname := core.GetHostname(ip)
 				if hostname != "Desconocido" {
 					log.Printf("Host encontrado - IP: %s, Hostname: %s", ip, hostname)

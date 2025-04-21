@@ -52,3 +52,22 @@ func RemoverAplicacion(equipoID uint, aplicacionID uint) OperacionResult {
 		Message: "Aplicación removida correctamente",
 	}
 }
+
+func GetAppService() ([]*models.Aplicacion, error) {
+	return repository.GetApp()
+}
+
+func GetAppByIdService(id uint) ([]*models.Aplicacion, error) {
+	equipoAplicaciones, err := repository.GetAppsByEquipoID(id)
+	if err != nil {
+		return nil, err
+	}
+
+	var aplicaciones []*models.Aplicacion
+
+	for _, equipoAplicacion := range equipoAplicaciones {
+		aplicaciones = append(aplicaciones, &equipoAplicacion.Aplicacion)
+	}
+
+	return aplicaciones, nil
+}

@@ -2,6 +2,7 @@ package repository
 
 import (
 	"errors"
+	"log"
 	"time"
 
 	"github.com/LucioSchiavoni/scan-host/infrastructure/database"
@@ -18,9 +19,10 @@ func GetEquipoConAplicaciones(equipoID uint) (*models.Equipo, error) {
 }
 
 func AgregarAplicacionAEquipo(equipoID uint, aplicacionID uint) error {
-	// Verificar si la aplicación existe
+
 	var aplicacion models.Aplicacion
 	if err := database.DB.First(&aplicacion, aplicacionID).Error; err != nil {
+		log.Printf("Aplicación no encontrada: ID %d", aplicacionID)
 		return errors.New("la aplicación no existe")
 	}
 
@@ -34,7 +36,6 @@ func AgregarAplicacionAEquipo(equipoID uint, aplicacionID uint) error {
 		return database.DB.Model(&equipoApp).Update("estado", "activo").Error
 	}
 
-	// Crear la nueva relación
 	equipoApp = models.EquipoAplicacion{
 		EquipoID:         equipoID,
 		AplicacionID:     aplicacionID,
@@ -52,4 +53,31 @@ func RemoverAplicacionDeEquipo(equipoID uint, aplicacionID uint) error {
 
 func ActualizarEquipo(equipo *models.Equipo) error {
 	return database.DB.Save(equipo).Error
+}
+
+func GetApp() ([]*models.Aplicacion, error) {
+	var aplicaciones []models.Aplicacion
+	if err := database.DB.Find(&aplicaciones).Error; err != nil {
+		return nil, err
+	}
+	var aplicacionesPtr []*models.Aplicacion
+	for i := range aplicaciones {
+		aplicacionesPtr = append(aplicacionesPtr, &aplicaciones[i])
+	}
+	return aplicacionesPtr, nil
+}
+
+func GetAppsByEquipoID(equipoID uint) ([]models.EquipoAplicacion, error) {
+	var equipoAplicaciones []models.EquipoAplicacion
+
+	err := database.DB.
+		Preload("Aplicacion").
+		Where("equipo_id = ?", equipoID).
+		Find(&equipoAplicaciones).Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	return equipoAplicaciones, nil
 }

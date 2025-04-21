@@ -29,6 +29,8 @@ func main() {
 	r.HandleFunc("/equipos/{id}", handlers.GetEquipoDetalleHandler).Methods("GET", "OPTIONS")
 	r.HandleFunc("/equipos/{id}/aplicaciones", handlers.AgregarAplicacionesHandler).Methods("PUT", "OPTIONS")
 	r.HandleFunc("/equipos/{id}/aplicaciones/{aplicacionId}", handlers.RemoverAplicacionHandler).Methods("DELETE", "OPTIONS")
+	r.HandleFunc("/aplicaciones", handlers.ObtenerAplicacionesHandler).Methods("GET")
+	r.HandleFunc("/aplicaciones/{id}", handlers.GetAppByIdHandler).Methods("GET", "OPTIONS")
 
 	serverAddress := fmt.Sprintf(":%s", config.ServerPort)
 	log.Printf("🚀 Servidor corriendo en http://localhost%s\n", serverAddress)

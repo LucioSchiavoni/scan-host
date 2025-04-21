@@ -78,3 +78,32 @@ func RemoverAplicacionHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(result)
 }
+
+func ObtenerAplicacionesHandler(w http.ResponseWriter, r *http.Request) {
+	aplicaciones, err := usecases.GetAppService()
+	if err != nil {
+		http.Error(w, "Error al obtener las aplicaciones", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(aplicaciones)
+}
+
+func GetAppByIdHandler(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	aplicacionID, err := strconv.ParseUint(vars["id"], 10, 32)
+	if err != nil {
+		http.Error(w, "ID de aplicación inválido", http.StatusBadRequest)
+		return
+	}
+
+	aplicacion, err := usecases.GetAppByIdService(uint(aplicacionID))
+	if err != nil {
+		http.Error(w, "Error al obtener la aplicación", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(aplicacion)
+}
