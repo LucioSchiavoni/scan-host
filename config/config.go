@@ -19,8 +19,9 @@ var (
 )
 
 func LoadConfig() {
-	err := godotenv.Load("/app/.env")
+	err := godotenv.Load()
 
+	//godotenv.Load("/app/.env")
 	if err != nil {
 		log.Fatal(" No se pudo cargar el archivo .env. Asegúrate de que exista y tenga las variables necesarias.")
 	}
